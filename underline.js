@@ -157,7 +157,7 @@
          * @example _.propType({someProperty: "this is string"}, "someProperty", "string")
          */
         propType: function (object, property, type) {
-            return !_.prop(object, property) ? false : _.type(object[property]) == type;
+            return _.prop(object, property) && _.type(object[property]) == type;
         },
 
         /**
@@ -193,7 +193,7 @@
          * @returns {boolean}
          */
         prop: function (object, property) {
-            return _.type(object) == "object" ? property in object : false;
+            return _.type(object) == "object" && property in object;
         },
         /**
          * Property exists in prototype
@@ -203,6 +203,29 @@
          */
         propPrototype: function (object, property) {
             return _.prop(object, property) && !_.propOwn(object, property);
+        },
+        /**
+         * Property equals passed variable
+         * @param {object} object
+         * @param {string} property
+         * @param {*} equals
+         * @param {boolean} strict
+         * @returns {boolean}
+         * @example _.propType({someProperty: "this is string"}, "someProperty", "string")
+         */
+        propEquals: function (object, property, equals, strict) {
+            return _.prop(object, property) && strict && _.equal(object[property], equals, strict);
+        },
+        /**
+         * Check variables
+         * @param {*} variable1
+         * @param {*} variable2
+         * @param {boolean} strict
+         * @returns {boolean}
+         */
+        equal: function (variable1, variable2, strict) {
+            if (isNaN(variable1) && isNaN(variable2)) return true;
+            return strict ? variable1 === variable2 : variable1 == variable2;
         }
     });
 }(this));
