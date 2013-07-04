@@ -1,6 +1,6 @@
 /**
- * UnderlineJS 0.0.1 (29.06.2013)
- * http://github
+ * UnderlineJS 0.0.2 (04.01.2013)
+ * https://github.com/P54l0m5h1k/underlinejs
  * UnderlineJS may be freely distributed under the MIT license
  * 2013 Anton Trofimenko ©
  */
@@ -58,7 +58,7 @@
          * @param {int} [onFailure=0]
          * @returns {number}
          */
-        toInt: function (variable, radix, onFailure) {
+        toInt1: function (variable, radix, onFailure) {
             var tmp, type = typeof(variable);
             if (type === "boolean") {
                 return +variable;
@@ -77,7 +77,7 @@
          * @example toFloat('-50 + 8'); -> -50
          */
         toFloat: function (mixed_var) {
-            return (parseFloat(mixed_var) || 0);
+            return parseFloat(mixed_var) || 0;
         },
         /**
          * Save any variable as string
@@ -85,10 +85,7 @@
          * @returns {*}
          */
         serialize: function (value) {
-            if (_.type(value) == "object")
-                if (!_.countObj(value))
-                    return "{}";
-            return JSON.stringify(value);
+            return "object" != _.type(value) || _.countObj(value) ? JSON.stringify(value) : "{}"
         },
         /**
          * Destringify string to object
@@ -96,18 +93,15 @@
          * @returns {*}
          */
         unserialize: function (string) {
-            if (_.type(string) != "string") return "";
-            if (string === "[object Object]") return {};
-            return JSON.parse(string);
+            return "string" != _.type(string) ? "" : "[object Object]" === string ? {} : JSON.parse(string)
         },
         /**
          * Count of attributes in object
-         * @param {*} obj
+         * @param {*} object
          * @returns {number}
          */
-        countObj: function (obj) {
-            if (_.type(obj) != "object") return 0;
-            return (obj.length === +obj.length) ? obj.length : _.keys(obj).length;
+        countObj: function (object) {
+            return"object" != _.type(object) ? 0 : object.length === +object.length ? object.length : _.keys(object).length
         },
         /**
          * Get type of variable
@@ -115,7 +109,7 @@
          * @returns {string}
          */
         type: function (variable) {
-            return Object.prototype.toString.call(variable).split(" ").pop().split("]").shift().toLowerCase();
+            return Object.prototype.toString.call(variable).split(" ").pop().split("]").shift().toLowerCase()
         },
         /**
          * If variable one of types
@@ -125,11 +119,7 @@
          * @example _.typeIn("Text", ["string", "integer"]);
          */
         typeIn: function (value, types) {
-            if (_.type(types) == "string")
-                return _.type(value) == types;
-            if (_.type(types) == "array")
-                return _.contains(types, value, 0);
-            return false;
+            return "string" == _.type(types) ? _.type(value) == types : "array" == _.type(types) ? _.contains(types, value, 0) : false
         },
         /**
          * Check nested property existence
@@ -140,13 +130,12 @@
          * @example _.propPath(MyObject, "property.property.property.value");
          */
         propPathType: function (object, path, types) {
-            var parts = path.split(".");
-            for (var i = 0, l = parts.length; i < l; i++) {
-                if (!_.prop(object, parts[i]))
+            for (var parts = path.split("."), index = 0, length = parts.length; length > index; index++) {
+                if (!_.prop(object, parts[index]))
                     return false;
-                object = object[parts[i]];
+                object = object[parts[index]]
             }
-            return _.typeIn(object, types);
+            return _.typeIn(object, types)
         },
         /**
          * Is object has a property of this type
@@ -157,9 +146,8 @@
          * @example _.propType({someProperty: "this is string"}, "someProperty", "string")
          */
         propType: function (object, property, type) {
-            return _.prop(object, property) && _.type(object[property]) == type;
+            return _.prop(object, property) && _.type(object[property]) == type
         },
-
         /**
          * Check nested property existence
          * @param {object} object
@@ -168,14 +156,13 @@
          * @example _.propPath(MyObject, "property.property.property.value");
          */
         propPath: function (object, path) {
-            var parts = path.split(".");
-            for (var i = 0, l = parts.length; i < l; i++) {
-                var part = parts[i];
+            for (var parts = path.split("."), index = 0, length = parts.length; length > index; index++) {
+                var part = parts[index];
                 if (!_.prop(object, part))
                     return false;
-                object = object[part];
+                object = object[part]
             }
-            return true;
+            return true
         },
         /**
          * Own property exists, not in prototype
@@ -184,7 +171,7 @@
          * @returns {boolean}
          */
         propOwn: function (object, property) {
-            return _.type(object) == "object" ? Object.prototype.hasOwnProperty.call(object, property) : false;
+            return _.type(object) == "object" ? Object.prototype.hasOwnProperty.call(object, property) : false
         },
         /**
          * Property exists
@@ -193,7 +180,7 @@
          * @returns {boolean}
          */
         prop: function (object, property) {
-            return _.type(object) == "object" && property in object;
+            return _.type(object) == "object" && property in object
         },
         /**
          * Property exists in prototype
@@ -202,7 +189,7 @@
          * @returns {boolean}
          */
         propPrototype: function (object, property) {
-            return _.prop(object, property) && !_.propOwn(object, property);
+            return _.prop(object, property) && !_.propOwn(object, property)
         },
         /**
          * Property equals passed variable
@@ -214,7 +201,7 @@
          * @example _.propType({someProperty: "this is string"}, "someProperty", "string")
          */
         propEquals: function (object, property, equals, strict) {
-            return _.prop(object, property) && strict && _.equal(object[property], equals, strict);
+            return _.prop(object, property) && strict && _.equal(object[property], equals, strict)
         },
         /**
          * Check variables
@@ -224,8 +211,7 @@
          * @returns {boolean}
          */
         equal: function (variable1, variable2, strict) {
-            if (isNaN(variable1) && isNaN(variable2)) return true;
-            return strict ? variable1 === variable2 : variable1 == variable2;
+            return isNaN(variable1) && isNaN(variable2) ? true : strict ? variable1 === variable2 : variable1 == variable2
         }
     });
 }(this));
