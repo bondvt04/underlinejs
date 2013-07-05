@@ -85,7 +85,8 @@
          * @returns {*}
          */
         unserialize: function (string) {
-            if (__.type(string) != "string") return "";
+            if (__.type(string) != "string")
+                return "";
             return string === "[object Object]" ? {} : JSON.parse(string);
         },
         /**
@@ -94,7 +95,8 @@
          * @returns {number}
          */
         countObj: function (obj) {
-            if (__.type(obj) != "object") return 0;
+            if (__.type(obj) != "object")
+                return 0;
             return obj.length === +obj.length ? obj.length : __.keys(obj).length;
         },
         /**
@@ -147,8 +149,6 @@
         propType: function (object, property, type) {
             return __.prop(object, property) && __.type(object[property]) == type;
         },
-
-
         /**
          * Check nested property existence
          * @param {object} object
@@ -213,7 +213,8 @@
          * @returns {boolean}
          */
         equal: function (variable1, variable2, strict) {
-            if (isNaN(variable1) && isNaN(variable2)) return true;
+            if (isNaN(variable1) && isNaN(variable2))
+                return true;
             return strict ? variable1 === variable2 : variable1 == variable2;
         },
         /**
@@ -222,13 +223,11 @@
          * @returns {Array}
          */
         keys: function (object) {
-            if(__.typeIn(object, ["string", "object"])) {
+            if(__.typeIn(object, ["array", "object"]))
                 return [];
-            }
             var keys = [];
-            for (var key in object) {
+            for (var key in object)
                 keys[keys.length] = key;
-            }
             return keys;
         }
     };
