@@ -105,7 +105,7 @@
          * @returns {string}
          */
         type: function (variable) {
-            return Object.prototype.toString.call(variable).split(" ").pop().split("]").shift().toLowerCase();
+            return Object.prototype.toString.call(variable).slice(8, -1);
         },
         /**
          * If variable one of types
